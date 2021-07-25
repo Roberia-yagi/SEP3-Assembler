@@ -36,22 +36,31 @@ public class Inst2 extends Sep3asmParseRule {
 			ctx.warning(tk.toExplainString() + "オペランドが来ます");
 		}
 	}
+
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
 		sep3inst = ctx.getTokenizer().getInstruction(inst.getText(), ctx);
 		if (op1 != null) {
 			op1.pass1(ctx);
 			op1.limit(sep3inst.getOp1Info(), ctx, inst, "fromオペランドとして");
-			if (op1.needExtraWord()) { ctx.addLocationCounter(2); }
-			else					 { ctx.addLocationCounter(1); }
+			if (op1.needExtraWord()) {
+				ctx.addLocationCounter(2);
+			} else {
+				ctx.addLocationCounter(1);
+			}
 		}
 		if (op2 != null) {
 			op2.pass1(ctx);
 			op2.limit(sep3inst.getOp2Info(), ctx, inst, "toオペランドとして");
 		}
 	}
+
 	public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {
-		if (op1 != null) { op1.pass2(ctx); }
-		if (op2 != null) { op2.pass2(ctx); }
+		if (op1 != null) {
+			op1.pass2(ctx);
+		}
+		if (op2 != null) {
+			op2.pass2(ctx);
+		}
 		sep3inst.generate(ctx, op1, op2);
 	}
 }

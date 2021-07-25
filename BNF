@@ -1,0 +1,71 @@
+プログラム ::= { 行 } EOF
+行 ::= コメント行 '\n' | 名前先行行 '\n' | 命令行 '\n' | 疑似命令行
+名前先行行 ::= 名前 (ラベル定義 '\n'| 疑似命令 '\n')
+コメント行 ::= 
+ラベル定義 ::= ':'
+命令行 ::= 0オペランド命令 | 1オペランド命令A Tオペランド | 1オペランド命令B Fオペランド  | 2オペランド命令 Fオペランド ’,’ Tオペランド
+0オペランド命令 ::=  'rit' | 'ret' | 'hlt' | 'nop'
+1オペランド命令A ::= 'jmp' | 'rjp' | 'brn' | 'brz' | 'brv' | 'brc' | 'rbn' | 'rbz' | 'rbv' | 'rbc' | 'jsr' | 'rjs' | 'svc'
+1オペランド命令B ::= ’clr' | 'asl' | 'asr' | 'lsl' | 'lsr' | 'rol' | 'ror'
+2オペランド命令 ::= ’mov’ | 'add' | 'sub' | 'cmp' | 'or' | 'xor' | 'and' | 'bit'
+Fオペランド ::= レジスタ | ’(’ レジスタ ’)’ [ ’+’ ] | ’-’ ’(’ レジスタ ’)’ | ’#’ 数 or 名前
+Tオペランド ::= レジスタ | ’(’ レジスタ ’)’ [ ’+’ ]
+レジスタ ::= ’r0’ | ’r1’ | ’r2’ | 'r3' | 'r4' | 'r5' | 'r6' | ’r7’ | ’psw’ | ’sp’ | ’pc’
+擬似命令行 ::= ’.word’ 数 or 名前リスト | ’.blkw’ 数 or 名前リスト | ’.’ ’=’ 数 or 名前 | ’.end’
+擬似命令 ::= ’=’ 数 or 名前 
+数 or 名前リスト ::= 数 or 名前 { ’,' 数 or 名前 }
+数 or 名前 ::= ['-'] (数 | 名前)
+
+First
+First(数 or 名前) = {'-', 数, 名前}
+First(数 or 名前リスト) = {'-', 数, 名前}
+First(疑似命令) = {'='}
+First(疑似命令行) = {4.word', '.blkw', '.', '.end'}
+First(レジスタ) = {’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+First(Tオペランド) = {'(', ’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+First(Fオペランド) = {'(', '-', '#', ’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+First(2オペランド命令) = {’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit'}
+First(1オペランド命令B) = {’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror'}
+First(1オペランド命令A) = {'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc'}
+First(0オペランド命令) = {'rit', 'ret', 'hlt', 'nop'}
+First(命令行) = {’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit', ’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc', 'rit', 'ret', 'hlt', 'nop'}
+First(ラベル定義行) = {':'}
+First(コメント行) = {\n}
+First(名前先行行) = {名前}
+First(行) = {名前, '\n', '.word', '.blkw', '.', '.end',’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit', ’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc', 'rit', 'ret', 'hlt', 'nop'}
+First(プログラム) = {名前, '\n', '.word', '.blkw', '.', '.end',’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit', ’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc', 'rit', 'ret', 'hlt', 'nop'}
+
+Director
+Director(プログラム, 行) = {名前, '\n', '.word', '.blkw', '.', '.end',’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit', ’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc', 'rit', 'ret', 'hlt', 'nop'}
+Director(行, コメント行 '\n') = {\n}
+Director(行, 名前先行行 '\n') = {名前}
+Director(行, 命令行 '\n') = {’mov’, 'add', 'sub', 'cmp', 'or', 'xor', 'and', 'bit', ’clr', 'asl', 'asr', 'lsl', 'lsr', 'rol', 'ror', 'jmp', 'rjp', 'brn', 'brz', 'brv', 'brc', 'rbn', 'rbz', 'rbv', 'rbc', 'jsr', 'rjs', 'svc', 'rit', 'ret', 'hlt', 'nop'}
+Director(行, 疑似命令行 '\n') = {'.word', '.blkw', '.', '.end'}
+Director(命令, 0オペランド命令) = {'rit' | 'ret' | 'hlt' | 'nop'}
+Director(命令, 1オペランド命令A Tオペランド) = {'jmp' | 'rjp' | 'brn' | 'brz' | 'brv' | 'brc' | 'rbn' | 'rbz' | 'rbv' | 'rbc' | 'jsr' | 'rjs' | 'svc'}
+Director(命令, 1オペランド命令B Fオペランド) = {’clr' | 'asl' | 'asr' | 'lsl' | 'lsr' | 'rol' | 'ror'}
+Director(命令, 2オペランド命令 Fオペランド ',' Tオペランド) = {’mov’ | 'add' | 'sub' | 'cmp' | 'or' | 'xor' | 'and' | 'bit'}
+Director(Fオペランド, レジスタ) = {’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+Director(Fオペランド, '(' レジスタ ')' ['+']) = {'('}
+Director(Fオペランド, '-' '(' レジスタ ')') = {'-'}
+Director(Fオペランド, '#' 数 or 名前) = {'#}
+Director(Tオペランド, レジスタ) = {’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+Director(Tオペランド, '(' レジスタ ')' ['+']) = {'('}
+
+//εがないからいらないと思う
+Follow
+Follow(プログラム) = {EOF}
+Follow(行) = {EOF}
+Follow(コメント行) = {'\n'}
+Follow(ラベル定義行) = {'\n'}
+Follow(命令行) = {'\n'}
+Follow(0オペランド命令) = {'\n'}
+Follow(1オペランド命令A) = {'(', ’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+Follow(1オペランド命令B) = {'(', '-', '#', ’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+Follow(2オペランド命令) = {'(', '-', '#', ’r0’, ’r1’, ’r2’, 'r3', 'r4', 'r5', 'r6', ’r7’, ’psw’, ’sp’, ’pc’}
+Follow(Fオペランド) = {'\n', ','}
+Follow(Tオペランド) = {'\n'}
+Follow(レジスタ) = {'\n', ',', ')'}
+Follow(疑似命令行) = {'\n'}
+Follow(数 or 名前リスト) = {'\n'}
+Follow(数 or 名前) = {'\n', ','}

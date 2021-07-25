@@ -15,8 +15,10 @@ public class Line extends Sep3asmParseRule {
 
 	public void parse(Sep3asmParseContext ctx) throws FatalErrorException {
 	}
+
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
 	}
+
 	public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
 	}
 }
