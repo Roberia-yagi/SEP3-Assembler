@@ -24,8 +24,12 @@ public class Sep3asmTokenizer extends SimpleTokenizer {
 	public Sep3asmToken getNextToken(Sep3asmParseContext pcx) {
 		TokenAssoc ta = null;
 		SimpleToken tk = super.getNextToken(pcx);
-		ta = rule.get(tk.getText());
-		int type = ta.getType();
+		String txt = tk.getText();
+		ta = rule.get(txt);
+		int type = tk.getType();
+		if (ta != null) {
+			type = ta.getType();
+		}
 		currentToken = new Sep3asmToken(type, tk, ta);
 		return currentToken;
 	}

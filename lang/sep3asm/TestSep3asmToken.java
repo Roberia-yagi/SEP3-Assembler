@@ -16,6 +16,7 @@ public class TestSep3asmToken {
 				} else {
 					ctx.getIOContext().getOutStream().println("Token=" + tk.toExplainString());
 				}
+				System.out.println(tk.getType());
 				tk = ctx.getTokenizer().getNextToken(ctx);
 			}
 		}

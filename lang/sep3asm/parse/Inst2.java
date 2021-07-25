@@ -5,7 +5,6 @@ import lang.sep3asm.*;
 import lang.sep3asm.instruction.Sep3Instruction;
 
 public class Inst2 extends Sep3asmParseRule {
-	// inst2 ::= INST2 operand COMMA operand
 	private Sep3asmToken inst;
 	private Operand op1, op2;
 	Sep3Instruction sep3inst;
@@ -13,19 +12,35 @@ public class Inst2 extends Sep3asmParseRule {
 	public Inst2(Sep3asmParseContext ctx) {
 	}
 
+	public static boolean isFirst(Sep3asmToken tk) {
+		return tk.getType() == Sep3asmToken.TK_INST2;
+	}
+
 	public void parse(Sep3asmParseContext ctx) throws FatalErrorException {
 		Sep3asmTokenizer ct = ctx.getTokenizer();
 		inst = ct.getCurrentToken(ctx);
+		// TODO: 消す
+		System.out.println("2オペランドの命令");
+		System.out.println(inst.toExplainString());
 		Sep3asmToken tk = ct.getNextToken(ctx);
 		if (Operand.isFirst(tk)) {
+			// TODO: 消す
+			System.out.println("2オペランドのFROM");
+			System.out.println(tk.toExplainString());
 			op1 = new Operand(ctx);
 			op1.parse(ctx);
 			tk = ct.getCurrentToken(ctx);
+			// TODO: 消す
+			System.out.println("2オペランドのFROMのあと");
+			System.out.println(tk.toExplainString());
 			if (tk.getType() == Sep3asmToken.TK_COMMA) {
 				tk = ct.getNextToken(ctx);
 			} else {
 				ctx.warning(tk.toExplainString() + ",が抜けていますので補いました");
 			}
+			// TODO: 消す
+			System.out.println("2オペランドのTO");
+			System.out.println(tk.toExplainString());
 			if (Operand.isFirst(tk)) {
 				op2 = new Operand(ctx);
 				op2.parse(ctx);
