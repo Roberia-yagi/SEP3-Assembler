@@ -35,6 +35,6 @@ public class Sep3asmTokenizer extends SimpleTokenizer {
 	}
 
 	public Sep3Instruction getInstruction(String name, Sep3asmParseContext pcx) {
-		return null;
+		return rule.get(name).getInstruction();
 	}
 }

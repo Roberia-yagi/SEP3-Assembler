@@ -13,8 +13,10 @@ public class Operand extends Sep3asmParseRule {
 	public static final int POSTINC = 010;
 	public static final int IMM = 020;
 	public static final int LABEL = 040;
+	public static final int FROM = 001;
+	public static final int TO = 002;
 	Sep3asmToken register;
-	int typeOfOperand;
+	int mode;
 	NumOrIdent noi;
 
 	public Operand(Sep3asmParseContext ctx) {
@@ -23,7 +25,7 @@ public class Operand extends Sep3asmParseRule {
 	public static boolean isFirst(Sep3asmToken tk) {
 		int type = tk.getType();
 		return type == Sep3asmToken.TK_REGISTOR || type == Sep3asmToken.TK_BRACKETa || type == Sep3asmToken.TK_BRACKETb
-				|| type == Sep3asmToken.TK_SHARP || type == Sep3asmToken.TK_IDENT || type == Sep3asmToken.TK_MINUS;
+				|| type == Sep3asmToken.TK_SHARP || type == Sep3asmToken.TK_MINUS || NumOrIdent.isFirst(tk);
 	}
 
 	public void parse(Sep3asmParseContext ctx) throws FatalErrorException {
@@ -32,7 +34,7 @@ public class Operand extends Sep3asmParseRule {
 		int type = tk.getType();
 		if (type == Sep3asmToken.TK_REGISTOR) {
 			register = tk;
-			typeOfOperand = REGISTER;
+			mode = REGISTER;
 			tk = ct.getNextToken(ctx);
 		} else if (type == Sep3asmToken.TK_BRACKETa) {
 			tk = ct.getNextToken(ctx);
@@ -41,20 +43,20 @@ public class Operand extends Sep3asmParseRule {
 				if (tk.getType() == Sep3asmToken.TK_BRACKETb) {
 					tk = ct.getNextToken(ctx);
 					if (tk.getType() == Sep3asmToken.TK_PLUS) {
-						typeOfOperand = POSTINC;
+						mode = POSTINC;
 						tk = ct.getNextToken(ctx);
 					} else if (tk.getType() == Sep3asmToken.TK_NL) {
-						typeOfOperand = INDIRECT;
+						mode = INDIRECT;
 					}
 				} else {
-					ctx.warning(tk.toExplainString() + ")が来ます");
+					ctx.fatalError(tk.toExplainString() + ")が抜けています");
 				}
 			} else {
-				ctx.warning(tk.toExplainString() + "レジスタ名が来ます");
+				ctx.fatalError(tk.toExplainString() + "レジスタ名が来ます");
 			}
 		} else if (type == Sep3asmToken.TK_MINUS) {
 			tk = ct.getNextToken(ctx);
-			//TODO: 消す
+			// TODO: 消す
 			System.out.println("マイナスの後");
 			System.out.println(tk.toExplainString());
 			if (tk.getType() == Sep3asmToken.TK_BRACKETa) {
@@ -62,7 +64,7 @@ public class Operand extends Sep3asmParseRule {
 				if (tk.getType() == Sep3asmToken.TK_REGISTOR) {
 					tk = ct.getNextToken(ctx);
 					if (tk.getType() == Sep3asmToken.TK_BRACKETb) {
-						typeOfOperand = PREDEC;
+						mode = PREDEC;
 						tk = ct.getNextToken(ctx);
 					} else {
 						ctx.warning(tk.toExplainString() + ")が来ます");
@@ -75,21 +77,21 @@ public class Operand extends Sep3asmParseRule {
 			}
 		} else if (type == Sep3asmToken.TK_SHARP) {
 			tk = ct.getNextToken(ctx);
-			//TODO: 消す
+			// TODO: 消す
 			System.out.println("#のあと");
 			System.out.println(tk.toExplainString());
 			if (NumOrIdent.isFirst(tk)) {
 				if (tk.getType() == Sep3asmToken.TK_NUM) {
-					typeOfOperand = IMM;
+					mode = IMM;
 				} else if (tk.getType() == Sep3asmToken.TK_IDENT) {
-					typeOfOperand = LABEL;
+					mode = LABEL;
 				}
 				noi = new NumOrIdent(ctx);
 				noi.parse(ctx);
 			} else {
 				ctx.warning(tk.toExplainString() + "数か名前が来ます");
 			}
-		} else if (type == Sep3asmToken.TK_IDENT) {
+		} else if (NumOrIdent.isFirst(tk)) {
 			noi = new NumOrIdent(ctx);
 			noi.parse(ctx);
 		} else {
@@ -114,9 +116,27 @@ public class Operand extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
+		// 本来モードはpass1で決まるもの？
+		// でも構文解析で決まっちゃうし，逆に構文解析じゃないと決められない気がする
 	}
 
-	public void limit(int info, Sep3asmParseContext ctx, Sep3asmToken inst, final String s) {
+	// TODO: limit関数ではどうやってOperandクラス内でFromとToを区別してよいかわからなかったためクラスを分けた
+	public void limit(int info, Sep3asmParseContext ctx, Sep3asmToken inst, int t, final String s)
+			throws FatalErrorException {
+		if ((mode & info) != 0x0) {
+			ctx.fatalError(s + "不適切なアドレシングモードが含まれています");
+		}
+		if (t == FROM && mode == PREDEC && register.getRegisterNumber() != 6) {
+			ctx.fatalError(s + "R6以外にプレデクリメントレジスタ間接アドレシングは使えません");
+		}
+		if (t == TO) {
+			if ((mode == INDIRECT || mode == POSTINC) && register.getRegisterNumber() == 7) {
+				ctx.fatalError(s + "R7に間接レジスタアドレシングは使えません");
+			}
+			if ((mode == PREDEC)) {
+				ctx.fatalError(s + "プレデクリメントモードは使えません");
+			}
+		}
 	}
 
 	public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {

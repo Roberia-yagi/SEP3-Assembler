@@ -12,9 +12,9 @@ public class Inst1a extends Sep3asmParseRule {
 	public Inst1a(Sep3asmParseContext ctx) {
 	}
 
-    public static boolean isFirst(Sep3asmToken tk) {
+	public static boolean isFirst(Sep3asmToken tk) {
 		return tk.getType() == Sep3asmToken.TK_INST1a;
-    }
+	}
 
 	public void parse(Sep3asmParseContext ctx) throws FatalErrorException {
 		Sep3asmTokenizer ct = ctx.getTokenizer();
@@ -30,9 +30,14 @@ public class Inst1a extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
+		sep3inst = ctx.getTokenizer().getInstruction(inst.getText(), ctx);
+		if (op != null) {
+			op.pass1(ctx);
+			op.limit(sep3inst.getOp2Info(), ctx, inst, Operand.TO, "toオペランドとして");
+			ctx.addLocationCounter(1);
+		}
 	}
 
-    public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {
-    }
+	public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {
+	}
 }
-

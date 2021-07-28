@@ -28,8 +28,6 @@ public class Program extends Sep3asmParseRule {
 			counter++;
 			System.out.println(counter);
 			System.out.println(tk.toExplainString());
-			if (counter == 100)
-				break;
 			Sep3asmParseRule line = new Line(ctx);
 			line.parse(ctx);
 			list.add(line);
@@ -41,6 +39,10 @@ public class Program extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext pcx) throws FatalErrorException {
+		for (int i = 0; i < list.size(); i++) {
+			Sep3asmParseRule line = list.get(i);
+			line.pass1(pcx);
+		}
 	}
 
 	public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {

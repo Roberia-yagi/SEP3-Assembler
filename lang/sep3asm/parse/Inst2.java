@@ -48,7 +48,7 @@ public class Inst2 extends Sep3asmParseRule {
 				ctx.warning(tk.toExplainString() + "オペランドが来ます");
 			}
 		} else {
-			ctx.warning(tk.toExplainString() + "オペランドが来ます");
+			ctx.fatalError(tk.toExplainString() + "オペランドが来ます");
 		}
 	}
 
@@ -56,7 +56,7 @@ public class Inst2 extends Sep3asmParseRule {
 		sep3inst = ctx.getTokenizer().getInstruction(inst.getText(), ctx);
 		if (op1 != null) {
 			op1.pass1(ctx);
-			op1.limit(sep3inst.getOp1Info(), ctx, inst, "fromオペランドとして");
+			op1.limit(sep3inst.getOp1Info(), ctx, inst, Operand.FROM, "fromオペランドとして");
 			if (op1.needExtraWord()) {
 				ctx.addLocationCounter(2);
 			} else {
@@ -65,7 +65,7 @@ public class Inst2 extends Sep3asmParseRule {
 		}
 		if (op2 != null) {
 			op2.pass1(ctx);
-			op2.limit(sep3inst.getOp2Info(), ctx, inst, "toオペランドとして");
+			op2.limit(sep3inst.getOp2Info(), ctx, inst, Operand.TO, "toオペランドとして");
 		}
 	}
 

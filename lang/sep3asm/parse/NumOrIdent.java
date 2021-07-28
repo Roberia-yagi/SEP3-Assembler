@@ -35,7 +35,7 @@ public class NumOrIdent extends Sep3asmParseRule {
             System.out.println("NumOrIndentの最奥部");
             System.out.println(tk.toExplainString());
         } else {
-            ctx.warning(tk.toExplainString() + "数字か名前が続きます");
+            ctx.fatalError(tk.toExplainString() + "数字か名前が続きます");
         }
     }
 

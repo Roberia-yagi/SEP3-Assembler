@@ -31,58 +31,78 @@ public class Sep3asmTokenRule extends HashMap<String, TokenAssoc> {
 		put(")", new TokenAssoc(Sep3asmToken.TK_BRACKETb, null));
 		put("#", new TokenAssoc(Sep3asmToken.TK_SHARP, null));
 		// レジスタ
-		put("r0", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r1", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r2", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r3", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r4", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r5", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r6", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("r7", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("psw", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("sp", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
-		put("pc", new TokenAssoc(Sep3asmToken.TK_REGISTOR, null));
+		put("r0", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 0));
+		put("r1", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 1));
+		put("r2", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 2));
+		put("r3", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 3));
+		put("r4", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 4));
+		put("r5", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 5));
+		put("r6", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 6));
+		put("r7", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 7));
+		put("psw", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 5));
+		put("sp", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 6));
+		put("pc", new TokenAssoc(Sep3asmToken.TK_REGISTOR, 7));
 		// データ転送命令
 		put("mov", new TokenAssoc(Sep3asmToken.TK_INST2,
 				new TwoOperandInstruction(0x4000, D | I | MI | IP | IMM, D | I | IP)));
 		// 演算命令
-		put("clr", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("add", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("sub", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("cmp", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("or", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("xor", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("and", new TokenAssoc(Sep3asmToken.TK_INST2, null));
-		put("bit", new TokenAssoc(Sep3asmToken.TK_INST2, null));
+		put("clr", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x1000, 0, D | I | IP)));
+		put("add", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x5000, D | I | MI | IP | IMM, D | I | IP)));
+		put("sub", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x6000, D | I | MI | IP | IMM, D | I | IP)));
+		put("cmp", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x6C00, D | I | MI | IP | IMM, D | I | IP)));
+		put("or", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x8000, D | I | MI | IP | IMM, D | I | IP)));
+		put("xor", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x8400, D | I | MI | IP | IMM, D | I | IP)));
+		put("and", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x8800, D | I | MI | IP | IMM, D | I | IP)));
+		put("bit", new TokenAssoc(Sep3asmToken.TK_INST2,
+				new TwoOperandInstruction(0x8C00, D | I | MI | IP | IMM, D | I | IP)));
 		// 桁移動命令
-		put("asl", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("asr", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("lsl", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("lsr", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("rsl", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
-		put("rsr", new TokenAssoc(Sep3asmToken.TK_INST1a, null));
+		put("asl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x2000, 0, D | I | IP)));
+		put("asr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x2400, 0, D | I | IP)));
+		put("lsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3000, 0, D | I | IP)));
+		put("lsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3400, 0, D | I | IP)));
+		put("rsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3800, 0, D | I | IP)));
+		put("rsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3C00, 0, D | I | IP)));
 		// 分岐命令
-		put("jmp", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rjp", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("brn", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("brz", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("brv", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("brc", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rbn", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rbz", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rbv", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rbc", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("jsr", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("rjs", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		put("ret", new TokenAssoc(Sep3asmToken.TK_INST0, null));
-		// 割り込み命令
-		put("rit", new TokenAssoc(Sep3asmToken.TK_INST0, null));
-		put("svc", new TokenAssoc(Sep3asmToken.TK_INST1b, null));
-		// システム制御命令
-		put("hlt", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x0000, 0, 0)));
-		put("nop", new TokenAssoc(Sep3asmToken.TK_INST0, null));
+		put("jmp", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0x4407, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rjp", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new RelativeJumpInstruction(0x5407, D | I | MI | IP | IMM | LABEL, 0)));
+		put("brn", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0xC007, D | I | MI | IP | IMM | LABEL, 0)));
+		put("brz", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0xC407, D | I | MI | IP | IMM | LABEL, 0)));
+		put("brv", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0xC807, D | I | MI | IP | IMM | LABEL, 0)));
+		put("brc", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0xCC07, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rbn", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new RelativeJumpInstruction(0xE007, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rbz", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new RelativeJumpInstruction(0xE407, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rbv", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new RelativeJumpInstruction(0xE807, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rbc", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new RelativeJumpInstruction(0xEC07, D | I | MI | IP | IMM | LABEL, 0)));
+		put("jsr", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new AbsoluteJumpInstruction(0xB01E, D | I | MI | IP | IMM | LABEL, 0)));
 		put("rjs", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new RelativeJumpInstruction(0xB41E, D | I | MI | IP | IMM | LABEL, 0)));
+		put("ret", new TokenAssoc(Sep3asmToken.TK_INST0,
+				new AbsoluteJumpInstruction(0x4AC7, 0, 0)));
+		// 割り込み命令
+		put("svc", new TokenAssoc(Sep3asmToken.TK_INST1b,
+				new OneOperandInstruction(0xB81E, D | I | MI | IP | IMM | LABEL, 0)));
+		put("rit", new TokenAssoc(Sep3asmToken.TK_INST0,
+				new ZeroOperandInstruction(0x4EC7, 0, 0)));
+		// システム制御命令
+		put("hlt", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x0000, 0, 0)));
+		put("nop", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x7000, 0, 0)));
 		// 疑似命令
 		put(".word", new TokenAssoc(Sep3asmToken.TK_DOTWD, null));
 		put(".blkw", new TokenAssoc(Sep3asmToken.TK_BLKW, null));

@@ -7,10 +7,10 @@ import lang.sep3asm.*;
 
 public class NumOrIdentList extends Sep3asmParseRule {
 
-    private ArrayList<Sep3asmParseRule> list;
+    ArrayList<NumOrIdent> list;
 
     public NumOrIdentList(Sep3asmParseContext ctx) {
-        list = new ArrayList<Sep3asmParseRule>();
+        list = new ArrayList<NumOrIdent>();
     }
 
     public static boolean isFirst(Sep3asmToken tk) {

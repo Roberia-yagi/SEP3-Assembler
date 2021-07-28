@@ -11,6 +11,8 @@ public abstract class SymbolTable<E extends SymbolTableEntry> extends HashMap<St
 	// 検索
 	public abstract E search(String name);
 
+	public abstract Integer resolve(String label);
+
 	// 全体表示
 	public void show() {
 		// System.out.println("--- Symbol Table ---");

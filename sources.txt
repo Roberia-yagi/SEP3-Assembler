@@ -5,8 +5,11 @@
 ./lang/LL1.java
 ./lang/ParseContext.java
 ./lang/ParseRule.java
+./lang/sep3asm/instruction/AbsoluteJumpInstruction.java
+./lang/sep3asm/instruction/OneOperandInstruction.java
 ./lang/sep3asm/instruction/RelativeJumpInstruction.java
 ./lang/sep3asm/instruction/Sep3Instruction.java
+./lang/sep3asm/instruction/ShiftInstruction.java
 ./lang/sep3asm/instruction/TwoOperandInstruction.java
 ./lang/sep3asm/instruction/ZeroOperandInstruction.java
 ./lang/sep3asm/LabelEntry.java

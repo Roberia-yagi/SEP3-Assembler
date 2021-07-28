@@ -27,20 +27,29 @@ Tオペランド ::= レジスタ | ’(’ レジスタ ’)’ [ ’+’ ]
 //  擬似命令 ::= ’=’ 数 or 名前 
 //  命令行 ::= 0オペランド命令行 | 1オペランド命令a行 | 1オペランド命令b行 | 2オペランド命令行
 //  0オペランド命令行 ::= 0オペランド命令
-//  1オペランド命令a行 ::= 1オペランド命令a Tオペランド
-//  1オペランド命令b行 ::= 1オペランド命令b Fオペランド 
-//  2オペランド命令 ::= Fオペランド ',' Tオペランド
-この下は別で処理するから今回はいらない？
-//  0オペランド命令 ::=  'rit' | 'ret' | 'hlt' | 'nop'
-//  1オペランド命令a ::= 'jmp' | 'rjp' | 'brn' | 'brz' | 'brv' | 'brc' | 'rbn' | 'rbz' | 'rbv' | 'rbc' | 'jsr' | 'rjs' | 'svc'
-//  1オペランド命令b ::= ’clr' | 'asl' | 'asr' | 'lsl' | 'lsr' | 'rol' | 'ror'
-//  2オペランド命令 ::= ’mov’ | 'add' | 'sub' | 'cmp' | 'or' | 'xor' | 'and' | 'bit'
+//  1オペランド命令a行 ::= 1オペランド命令a オペランド
+//  1オペランド命令b行 ::= 1オペランド命令b オペランド 
+//  2オペランド命令 ::= 2オペランド命令 オペランド ',' オペランド
 //  オペランド ::= レジスタ | ’(’ レジスタ ’)’ [ ’+’ ] | ’-’ ’(’ レジスタ ’)’ | ’#’ 数 or 名前 | 名前
-ここも別で処理するからいらなそう
-//  レジスタ ::= ’r0’ | ’r1’ | ’r2’ | 'r3' | 'r4' | 'r5' | 'r6' | ’r7’ | ’psw’ | ’sp’ | ’pc’
 //  擬似命令行 ::= ’.word’ 数 or 名前リスト | ’.blkw’ 数 or 名前リスト | ’.’ ’=’ 数 or 名前 | ’.end’
 //  数 or 名前リスト ::= 数 or 名前 { ’,' 数 or 名前 }
 //  数 or 名前 ::= ['-'] (数 | 名前)
+
+English ver for pass1
+// program ::= { line } EOF
+// Line ::= '\n' | NameFirstLine '\n' | InstLine '\n' | PseudoInstLine '\n'
+// NameFirstLine ::= Ident (DefLabel | PseudoInst)
+// DefLabel ::= ':'
+// PseudoInst ::= '=' NumOrIdent
+// InstLine ::= Inst0(line) | Inst1a(line) | Inst1b(line) | Inst2(line)
+// Inst0 ::= Inst0
+// Inst1a ::= Inst1a Operand
+// Inst1b ::= Inst1b Operand
+// Inst2 ::= Inst2 Operand ',' Operand
+// Operand ::= Register | '(' Register ')' [ '+' ] | '-' '(' Registor ')' | '#' NumOrIdent | Ident
+// PseudoInstLine ::= '.word' NumOrIdentList | '.blkw' NumOrIdentList | '.' '=' NumOrIdent | '.end'
+NumOrIdentList ::= NumOrIdent { '.' NumOrIdent }
+NumOrIdent ::= ['-'] (Num | Ident)
 
 First
 First(数 or 名前) = {'-', 数, 名前}
