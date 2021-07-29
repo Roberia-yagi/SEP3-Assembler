@@ -22,7 +22,7 @@ public class Line extends Sep3asmParseRule {
 		Sep3asmToken tk = ct.getCurrentToken(ctx);
 		if (NameFirstLine.isFirst(tk) || InstLine.isFirst(tk) || PseudoInstLine.isFirst(tk)) {
 			if (NameFirstLine.isFirst(tk)) {
-				//TODO: 消す
+				// TODO: 消す
 				System.out.println("ラベル読んでNameFirstLineに入った");
 				line = new NameFirstLine(ctx);
 			} else if (InstLine.isFirst(tk)) {
@@ -48,7 +48,11 @@ public class Line extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-		line.pass1(ctx);
+		// TODO: 消す
+		System.out.println("line pass1");
+		if (line != null) {
+			line.pass1(ctx);
+		}
 	}
 
 	public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {

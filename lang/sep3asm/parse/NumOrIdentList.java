@@ -35,6 +35,8 @@ public class NumOrIdentList extends Sep3asmParseRule {
     }
 
     public void pass1(Sep3asmParseContext pcx) throws FatalErrorException {
+		// TODO: 消す
+		System.out.println("NumOrIndentList pass1");
     }
 
     public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {

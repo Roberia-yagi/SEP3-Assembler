@@ -39,13 +39,14 @@ public class Operand extends Sep3asmParseRule {
 		} else if (type == Sep3asmToken.TK_BRACKETa) {
 			tk = ct.getNextToken(ctx);
 			if (tk.getType() == Sep3asmToken.TK_REGISTOR) {
+				register = tk;
 				tk = ct.getNextToken(ctx);
 				if (tk.getType() == Sep3asmToken.TK_BRACKETb) {
 					tk = ct.getNextToken(ctx);
 					if (tk.getType() == Sep3asmToken.TK_PLUS) {
 						mode = POSTINC;
 						tk = ct.getNextToken(ctx);
-					} else if (tk.getType() == Sep3asmToken.TK_NL) {
+					} else {
 						mode = INDIRECT;
 					}
 				} else {
@@ -62,6 +63,7 @@ public class Operand extends Sep3asmParseRule {
 			if (tk.getType() == Sep3asmToken.TK_BRACKETa) {
 				tk = ct.getNextToken(ctx);
 				if (tk.getType() == Sep3asmToken.TK_REGISTOR) {
+					register = tk;
 					tk = ct.getNextToken(ctx);
 					if (tk.getType() == Sep3asmToken.TK_BRACKETb) {
 						mode = PREDEC;
@@ -92,6 +94,11 @@ public class Operand extends Sep3asmParseRule {
 				ctx.warning(tk.toExplainString() + "数か名前が来ます");
 			}
 		} else if (NumOrIdent.isFirst(tk)) {
+			if (tk.getType() == Sep3asmToken.TK_NUM) {
+				mode = IMM;
+			} else if (tk.getType() == Sep3asmToken.TK_IDENT) {
+				mode = LABEL;
+			}
 			noi = new NumOrIdent(ctx);
 			noi.parse(ctx);
 		} else {
@@ -116,14 +123,17 @@ public class Operand extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-		// 本来モードはpass1で決まるもの？
-		// でも構文解析で決まっちゃうし，逆に構文解析じゃないと決められない気がする
+		if (mode == IMM) {
+			needExtraWord = true;
+		}
 	}
 
 	// TODO: limit関数ではどうやってOperandクラス内でFromとToを区別してよいかわからなかったためクラスを分けた
 	public void limit(int info, Sep3asmParseContext ctx, Sep3asmToken inst, int t, final String s)
 			throws FatalErrorException {
-		if ((mode & info) != 0x0) {
+		// TODO: 消す
+		System.out.println(mode);
+		if ((mode & info) == 0x0) {
 			ctx.fatalError(s + "不適切なアドレシングモードが含まれています");
 		}
 		if (t == FROM && mode == PREDEC && register.getRegisterNumber() != 6) {

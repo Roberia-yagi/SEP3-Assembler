@@ -8,6 +8,7 @@ public class Sep3asmSymbolTable extends SymbolTable<LabelEntry> {
 
 	@Override
 	public LabelEntry register(String name, LabelEntry e) {
+		put(name, e);
 		return null;
 	}
 
@@ -22,6 +23,7 @@ public class Sep3asmSymbolTable extends SymbolTable<LabelEntry> {
 		LabelEntry d = get(label);
 		while ((d != null) && d.isLabel()) {
 			if (visitedSet.contains(d)) {
+				// TODO: 消す
 				return null;
 			} // 解決できなかった事実をnull で返す
 			visitedSet.add(d);
@@ -32,6 +34,7 @@ public class Sep3asmSymbolTable extends SymbolTable<LabelEntry> {
 				e.setInteger(d.getInteger());
 			}
 		}
+		// TODO: 消す
 		return (d == null) ? null : d.getInteger();
 	}
 }

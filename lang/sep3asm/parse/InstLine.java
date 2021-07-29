@@ -32,6 +32,8 @@ public class InstLine extends Sep3asmParseRule {
     }
 
     public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
+		// TODO: 消す
+		System.out.println("InstLine pass1");
         inst.pass1(ctx);
     }
 

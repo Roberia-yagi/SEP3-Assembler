@@ -66,7 +66,8 @@ public class PseudoInstLine extends Sep3asmParseRule {
     }
 
     public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-        noilist.pass1(ctx);
+		// TODO: 消す
+		System.out.println("PseudoInstLine pass1");
         if (type == Sep3asmToken.TK_DOTWD) {
             for (int i = 0; i < noilist.list.size(); i++) {
                 ctx.addLocationCounter(1);
@@ -89,7 +90,7 @@ public class PseudoInstLine extends Sep3asmParseRule {
                 }
             }
         } else if (type == Sep3asmToken.TK_DOT) {
-            
+            ctx.setLocationCounter(noi.noi.getIntValue());
         }
     }
 
