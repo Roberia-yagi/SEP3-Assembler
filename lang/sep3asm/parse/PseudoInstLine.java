@@ -2,12 +2,15 @@ package lang.sep3asm.parse;
 
 import lang.*;
 import lang.sep3asm.*;
+import lang.sep3asm.instruction.Sep3Instruction;
 
 public class PseudoInstLine extends Sep3asmParseRule {
 
+    private Sep3asmToken inst;
     int type;
     NumOrIdentList noilist;
     NumOrIdent noi;
+    Sep3Instruction sep3inst;
 
     // TODO: 定数作ってどの分岐をしたかを持っておくべき
     public PseudoInstLine(Sep3asmParseContext ctx) {
@@ -27,6 +30,7 @@ public class PseudoInstLine extends Sep3asmParseRule {
         System.out.println(tk.toExplainString());
         type = tk.getType();
         if (type == Sep3asmToken.TK_DOTWD) {
+            inst = ct.getCurrentToken(ctx);
             tk = ct.getNextToken(ctx);
             noilist = new NumOrIdentList(ctx);
             noilist.parse(ctx);
@@ -66,8 +70,8 @@ public class PseudoInstLine extends Sep3asmParseRule {
     }
 
     public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-		// TODO: 消す
-		System.out.println("PseudoInstLine pass1");
+        // TODO: 消す
+        System.out.println("PseudoInstLine pass1");
         if (type == Sep3asmToken.TK_DOTWD) {
             for (int i = 0; i < noilist.list.size(); i++) {
                 ctx.addLocationCounter(1);
@@ -95,5 +99,27 @@ public class PseudoInstLine extends Sep3asmParseRule {
     }
 
     public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
+        if (type == Sep3asmToken.TK_DOTWD) {
+            for (int i = 0; i < noilist.list.size(); i++) {
+                sep3inst = pcx.getTokenizer().getInstruction(inst.getText(), pcx);
+                if (noilist.list.get(i).noi.getType() == Sep3asmToken.TK_IDENT) {
+                    pcx.getSymbolTable().resolve(noilist.list.get(i).noi.getText());
+                }
+            }
+        } else if (type == Sep3asmToken.TK_BLKW) {
+            for (int i = 0; i < noilist.list.size(); i++) {
+                NumOrIdent noi = noilist.list.get(i);
+                if (noi.noi.getType() == Sep3asmToken.TK_NUM) {
+                    int j = noi.noi.getIntValue();
+                    pcx.addLocationCounter(j);
+                } else if (noi.noi.getType() == Sep3asmToken.TK_IDENT) {
+                    // TODO: 値が後に決まるラベル名がblkwに入っていた場合どのようにロケーションカウントを増やせばいいのかわからないから飛ばす
+                    pcx.addLocationCounter(pcx.getSymbolTable().resolve(noi.noi.getText()));
+                }
+            }
+        } else if (type == Sep3asmToken.TK_DOT) {
+            pcx.setLocationCounter(noi.noi.getIntValue());
+        }
+
     }
 }

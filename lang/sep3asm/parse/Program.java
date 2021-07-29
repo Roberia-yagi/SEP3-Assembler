@@ -41,7 +41,7 @@ public class Program extends Sep3asmParseRule {
 	public void pass1(Sep3asmParseContext pcx) throws FatalErrorException {
 		for (int i = 0; i < list.size(); i++) {
 			// TODO : 消す
-			System.out.print(i+1);
+			System.out.print(i + 1);
 			System.out.println("行");
 			Sep3asmParseRule line = list.get(i);
 			line.pass1(pcx);
@@ -51,5 +51,14 @@ public class Program extends Sep3asmParseRule {
 	}
 
 	public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
+		for (int i = 0; i < list.size(); i++) {
+			// TODO : 消す
+			System.out.print(i + 1);
+			System.out.println("行");
+			Sep3asmParseRule line = list.get(i);
+			line.pass2(pcx);
+		}
+		// TODO: 消す
+		pcx.getSymbolTable().show();
 	}
 }

@@ -21,14 +21,24 @@ public class Sep3asmSymbolTable extends SymbolTable<LabelEntry> {
 	public Integer resolve(String label) {
 		HashSet<LabelEntry> visitedSet = new HashSet<LabelEntry>();
 		LabelEntry d = get(label);
+		// TODO: 消す
+		System.out.println(label);
 		while ((d != null) && d.isLabel()) {
 			if (visitedSet.contains(d)) {
 				// TODO: 消す
+				System.out.println("循環してます");
 				return null;
 			} // 解決できなかった事実をnull で返す
 			visitedSet.add(d);
+			// TODO: 消す
+			System.out.println("visitedSet added");
 			d = get(d.getLabel()); // (*)
 		}
+
+		// TODO: 消す
+		System.out.println("resolving");
+		System.out.println("set size");
+		System.out.println(visitedSet.size());
 		if ((d != null) && d.isInteger()) {
 			for (LabelEntry e : visitedSet) {
 				e.setInteger(d.getInteger());

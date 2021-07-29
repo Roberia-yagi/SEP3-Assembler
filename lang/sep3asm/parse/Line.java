@@ -56,5 +56,8 @@ public class Line extends Sep3asmParseRule {
 	}
 
 	public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
+		if (line != null) {
+			line.pass2(pcx);
+		}
 	}
 }

@@ -32,12 +32,13 @@ public class InstLine extends Sep3asmParseRule {
     }
 
     public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-		// TODO: 消す
-		System.out.println("InstLine pass1");
+        // TODO: 消す
+        System.out.println("InstLine pass1");
         inst.pass1(ctx);
     }
 
     public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
+       inst.pass2(pcx);
     }
 
 }

@@ -43,5 +43,9 @@ public class Inst1b extends Sep3asmParseRule {
 	}
 
 	public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {
+		if (op != null) {
+			op.pass2(ctx);
+		}
+		sep3inst.generate(ctx, op, null);
 	}
 }

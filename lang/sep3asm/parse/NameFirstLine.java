@@ -52,18 +52,21 @@ public class NameFirstLine extends Sep3asmParseRule {
                 }
                 e.setInteger(i);
                 ctx.getSymbolTable().register(ident.getText(), e);
-                ctx.getSymbolTable().resolve(ident.getText());
             } else if (noi.noi.getType() == Sep3asmToken.TK_IDENT) {
                 String label = noi.noi.getText();
                 e.setLabel(label);
                 ctx.getSymbolTable().register(ident.getText(), e);
-                ctx.getSymbolTable().resolve(label);
             }
 
         }
     }
 
     public void pass2(Sep3asmParseContext pcx) throws FatalErrorException {
+        if (inst != null) {
+            NumOrIdent noi = inst.noi;
+            if (noi.noi.getType() == Sep3asmToken.TK_IDENT) {
+                pcx.getSymbolTable().resolve(ident.getText());
+            }
+        }
     }
-
 }

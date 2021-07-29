@@ -84,6 +84,9 @@ public class Operand extends Sep3asmParseRule {
 			System.out.println(tk.toExplainString());
 			if (NumOrIdent.isFirst(tk)) {
 				if (tk.getType() == Sep3asmToken.TK_NUM) {
+					// TODO: 消す
+					System.out.println("MODE = IMM");
+					System.out.println("IMM = " + IMM);
 					mode = IMM;
 				} else if (tk.getType() == Sep3asmToken.TK_IDENT) {
 					mode = LABEL;
@@ -94,11 +97,7 @@ public class Operand extends Sep3asmParseRule {
 				ctx.warning(tk.toExplainString() + "数か名前が来ます");
 			}
 		} else if (NumOrIdent.isFirst(tk)) {
-			if (tk.getType() == Sep3asmToken.TK_NUM) {
-				mode = IMM;
-			} else if (tk.getType() == Sep3asmToken.TK_IDENT) {
-				mode = LABEL;
-			}
+			mode = LABEL;
 			noi = new NumOrIdent(ctx);
 			noi.parse(ctx);
 		} else {
@@ -123,7 +122,7 @@ public class Operand extends Sep3asmParseRule {
 	}
 
 	public void pass1(Sep3asmParseContext ctx) throws FatalErrorException {
-		if (mode == IMM) {
+		if (mode == IMM || mode == LABEL) {
 			needExtraWord = true;
 		}
 	}
@@ -150,5 +149,27 @@ public class Operand extends Sep3asmParseRule {
 	}
 
 	public void pass2(Sep3asmParseContext ctx) throws FatalErrorException {
+		if (mode == IMM) {
+			extraWord = noi.noi.getIntValue();
+			fivebits |= Integer.parseInt("11111", 2);
+		} else if (mode == LABEL) {
+			extraWord = ctx.getSymbolTable().resolve(noi.noi.getText());
+			// TODO: 消す
+			System.out.println("THIS OPERAND IS LABEL");
+			fivebits |= Integer.parseInt("11111", 2);
+			// TODO: 消す
+			System.out.println("LABEL RESOLVING");
+		} else {
+			fivebits = register.getRegisterNumber();
+			if (mode == REGISTER) {
+				fivebits |= Integer.parseInt("00000", 2);
+			} else if (mode == INDIRECT) {
+				fivebits |= Integer.parseInt("01000", 2);
+			} else if (mode == PREDEC) {
+				fivebits |= Integer.parseInt("10000", 2);
+			} else if (mode == POSTINC) {
+				fivebits |= Integer.parseInt("11000", 2);
+			}
+		}
 	}
 }

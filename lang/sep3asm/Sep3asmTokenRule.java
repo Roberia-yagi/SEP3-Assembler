@@ -62,25 +62,25 @@ public class Sep3asmTokenRule extends HashMap<String, TokenAssoc> {
 		put("bit", new TokenAssoc(Sep3asmToken.TK_INST2,
 				new TwoOperandInstruction(0x8C00, D | I | MI | IP | IMM, D | I | IP)));
 		// 桁移動命令
-		put("asl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x2000, 0, D | I | IP)));
-		put("asr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x2400, 0, D | I | IP)));
-		put("lsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3000, 0, D | I | IP)));
-		put("lsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3400, 0, D | I | IP)));
-		put("rsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3800, 0, D | I | IP)));
-		put("rsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new ShiftInstruction(0x3C00, 0, D | I | IP)));
+		put("asl", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x2000, 0, D | I | IP)));
+		put("asr", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x2400, 0, D | I | IP)));
+		put("lsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x3000, 0, D | I | IP)));
+		put("lsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x3400, 0, D | I | IP)));
+		put("rsl", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x3800, 0, D | I | IP)));
+		put("rsr", new TokenAssoc(Sep3asmToken.TK_INST1a, new OneOperandInstruction(0x3C00, 0, D | I | IP)));
 		// 分岐命令
 		put("jmp", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0x4407, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0x4407, D | I | MI | IP | IMM | LABEL, 0)));
 		put("rjp", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new RelativeJumpInstruction(0x5407, D | I | MI | IP | IMM | LABEL, 0)));
 		put("brn", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0xC007, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0xC007, D | I | MI | IP | IMM | LABEL, 0)));
 		put("brz", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0xC407, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0xC407, D | I | MI | IP | IMM | LABEL, 0)));
 		put("brv", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0xC807, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0xC807, D | I | MI | IP | IMM | LABEL, 0)));
 		put("brc", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0xCC07, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0xCC07, D | I | MI | IP | IMM | LABEL, 0)));
 		put("rbn", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new RelativeJumpInstruction(0xE007, D | I | MI | IP | IMM | LABEL, 0)));
 		put("rbz", new TokenAssoc(Sep3asmToken.TK_INST1b,
@@ -90,21 +90,19 @@ public class Sep3asmTokenRule extends HashMap<String, TokenAssoc> {
 		put("rbc", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new RelativeJumpInstruction(0xEC07, D | I | MI | IP | IMM | LABEL, 0)));
 		put("jsr", new TokenAssoc(Sep3asmToken.TK_INST1b,
-				new AbsoluteJumpInstruction(0xB01E, D | I | MI | IP | IMM | LABEL, 0)));
+				new OneOperandInstruction(0xB01E, D | I | MI | IP | IMM | LABEL, 0)));
 		put("rjs", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new RelativeJumpInstruction(0xB41E, D | I | MI | IP | IMM | LABEL, 0)));
-		put("ret", new TokenAssoc(Sep3asmToken.TK_INST0,
-				new AbsoluteJumpInstruction(0x4AC7, 0, 0)));
+		put("ret", new TokenAssoc(Sep3asmToken.TK_INST0, new AbsoluteJumpInstruction(0x4AC7, 0, 0)));
 		// 割り込み命令
 		put("svc", new TokenAssoc(Sep3asmToken.TK_INST1b,
 				new OneOperandInstruction(0xB81E, D | I | MI | IP | IMM | LABEL, 0)));
-		put("rit", new TokenAssoc(Sep3asmToken.TK_INST0,
-				new ZeroOperandInstruction(0x4EC7, 0, 0)));
+		put("rit", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x4EC7, 0, 0)));
 		// システム制御命令
 		put("hlt", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x0000, 0, 0)));
 		put("nop", new TokenAssoc(Sep3asmToken.TK_INST0, new ZeroOperandInstruction(0x7000, 0, 0)));
 		// 疑似命令
-		put(".word", new TokenAssoc(Sep3asmToken.TK_DOTWD, null));
+		put(".word", new TokenAssoc(Sep3asmToken.TK_DOTWD, new DotWordInstruction(0x0000, 0, 0)));
 		put(".blkw", new TokenAssoc(Sep3asmToken.TK_BLKW, null));
 		put(".end", new TokenAssoc(Sep3asmToken.TK_END, null));
 	}
